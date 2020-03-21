@@ -46,7 +46,15 @@
 
     // Register
 
-    new FETCHrequest(`${apiUrl}/api/register`, 'POST')
+    new FETCHrequest(
+            `${apiUrl}/api/register`,
+            'POST',
+            {
+                email = userEmail.value,
+                password = userPassword.value,
+                pseudo = userPseudo.value
+            }
+         )
     .sendRequest()
     .then( jsonData => {
         console.log(jsonData)
@@ -54,6 +62,24 @@
     .catch( jsonError => {
         console.log(jsonError);
     })
+
+    // Login
+
+    // new FETCHrequest(
+    //     `${apiUrl}/api/login`,
+    //     'POST',
+    //     {
+    //         email = loginEmail.value,
+    //         password = loginPassword.value,
+    //     }
+    //  )
+    // .sendRequest()
+    // .then( jsonData => {
+    //     console.log(jsonData)
+    // })
+    // .catch( jsonError => {
+    //     console.log(jsonError);
+    // })   
 
 
 

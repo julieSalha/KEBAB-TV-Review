@@ -272,6 +272,11 @@ const closePopin = (button) => {
     })
 };
 
+/* Close loading */
+
+const closeLoading = () => {
+    // loading
+};
 
     // Attendre le chargement du DOM
     document.addEventListener('DOMContentLoaded', () => {

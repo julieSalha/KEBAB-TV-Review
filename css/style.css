@@ -1,5 +1,10 @@
 body{
     padding: 2rem;
+    background: #ff25ff;
+  }
+
+  h1 {
+      color: #ffffff;
   }
   
   header{
@@ -25,14 +30,6 @@ body{
     text-align: center;
   }
   
-  /* figure:hover{
-    transform: rotateY(90deg);
-  }
-  
-  figure:hover + div.overview{
-    transform: rotateY(0deg);
-  }
-  */
   #movieList article {
     display: inline-block;
     position: relative;
@@ -64,7 +61,7 @@ body{
     width: 100vw;
     height: 100vh;
     background: rgba(255, 255, 255, .5);
-    z-index: 0;
+    z-index: -10;
     display: flex;
     flex-direction: column;
     opacity: 0;
@@ -91,4 +88,22 @@ body{
   
   #moviePopin article div{
     width: calc( 50% - 1rem );
+  }
+
+#loading.open {
+    background: #ff25ff;
+    text-align: center;
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    top: 8vh;
+    left: 0;
+}
+
+#loading img {
+    transform: translateY(20%);
+}
+
+#loading.close {
+   display: none;
   }

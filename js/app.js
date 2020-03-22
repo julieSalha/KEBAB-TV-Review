@@ -29,7 +29,7 @@
     const movieList = document.querySelector('#movieList');
     const moviePopin = document.querySelector('#moviePopin article');
     const favoriteList = document.querySelector('#favorite ul');
-    const buttonDelete = document.querySelector('#favorite ul li button.eraseFavorite');
+    const buttonDelete = document.querySelector('#favorite ul button.eraseFavorite');
 
     // Loading
     const loading = document.querySelector('#loading');
@@ -74,7 +74,7 @@ const login = () => {
             // Stop event propagation
             event.preventDefault();
     
-            new FETCHrequest(
+        new FETCHrequest(
                 `${apiUrl}/api/login`,
                 'POST',
                 {
@@ -213,7 +213,7 @@ const displayPopin = (data) => {
         closePopin(document.querySelector('#closeButton'));
 };
 
-    /* Ajout des favoris */
+    /* Ajout + afficher des favoris */
 
 const addFavorite = (button, data) => {
     button.addEventListener('click', () => {
@@ -228,31 +228,37 @@ const addFavorite = (button, data) => {
             }
          )
         .sendRequest()
-        .then( jsonData => {console.log(jsonData)})
-        .catch( jsonError => {console.log(jsonError);
-        })
+        .then( jsonData => console.log(jsonData))
+        .catch( jsonError => console.log(jsonError));
     
         favoriteList.innerHTML += `
-                <li><span>${data.original_title}</span></li>
-                <button class="eraseFavorite" movie-id="${data.id}"><i class="fas fa-eraser"></i></button>
+                <li>
+                    <span>${data.original_title}</span>
+                    <button class="eraseFavorite" movie-id="${data._id}"><i class="fas fa-eraser"></i></button>
+                </li>
             `    
     })
 };
 
+
 /* Supprimer favoris */
 
-// const deleteFavorite = favorites => {
-//     for( let item of favorites ){
-//         item.addEventListener('click', () => {
-//             new FETCHrequest( `${apiUrl}/api/favorite/${item.data._id}`, 'DELETE' )
-//             .fetch()
-//             .then( fetchData => checkUserToken('favorite'))
-//             .catch( fetchError => {
-//                 console.log(fetchError)
-//             })
-//         })
-//     }
-// }
+const deleteFavorite = _id => {
+
+    document.querySelectorAll('.eraseFavorite').addEventListener('click', () => {
+        new FETCHrequest(
+            `${apiUrl}/api/favorite/<_id>`,
+            'DELETE',
+            {
+                token : localStorage.getItem('kento')
+            }
+         )
+        .sendRequest()
+        .then( jsonData => console.log(jsonData))
+        .catch( jsonError => { console.log(jsonError) })
+    })
+};
+
 
 /* Close popin */
 

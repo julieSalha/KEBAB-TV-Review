@@ -1,20 +1,20 @@
+// DÉCLARATIONS
+
+    // API Node Back-end Julien NOYER //Register/login/favori (API Node)
+    const apiUrl = 'https://kebabtv.dwsapp.io';
+
+    // API Front The Movie Data Base
+    const theMoviedbURL = 'https://api.themoviedb.org/3/search/movie?api_key=6fd32a8aef5f85cabc50cbec6a47f92f&query=';
 
 
-    // Déclarations
-
-        // API Front The Movie Data Base
-    const themoviedbUrl = 'https://api.themoviedb.org/3/search/movie/550?api_key=5d88944cd5014d24a58b2687db97f9ee&language=en-US&query=';
-
-    // API Node Back-end Julien NOYER
-    const apiUrl = 'https://kebabtv.dwsapp.io'; //Register/login/favori (API Node)
-
-        // Local Storage
-    const localSt = 'kento';
-
-        // Navigation
     const mainNav = document.querySelector('header nav');
 
-        // Register
+    // Search form
+    const searchForm = document.querySelector('#searchForm');
+    const searchLabel = document.querySelector('#searchForm span');
+    const searchData = document.querySelector('[name="searchData"]');
+
+            // Register
     const registerForm = document.querySelector('#registerForm');
     const userEmail = document.querySelector('[name="userEmail"]');
     const userPassword = document.querySelector('[name="userPassword"]');
@@ -25,74 +25,26 @@
     const loginEmail = document.querySelector('[name="loginEmail"]');
     const loginPassword = document.querySelector('[name="loginPassword"]');
 
-        // Search
-    const searchForm = document.querySelector('#searchForm');
-    const searchLabel = document.querySelector('#searchForm span');
-    const searchData = document.querySelector('[name="searchData"]');
-
-        // Movies & Bookmarks
+    // Movies & Bookmarks
     const movieList = document.querySelector('#movieList');
     const moviePopin = document.querySelector('#moviePopin article');
     const favoriteList = document.querySelector('#favorite ul');
+    const buttonDelete = document.querySelector('#favorite ul li button.eraseFavorite');
 
-        // Loading
+    // Loading
     const loading = document.querySelector('#loading');
 
-        // Error
+    // Error
     const formError = document.querySelector('#formError');
 
 
-// Functions
 
-    // Search films
+// FONCTIONS
 
-    searchForm.addEventListener('submit', event => {
-        // Stop event propagation
-        event.preventDefault();
+    /* Register */ 
 
-        new FETCHrequest(
-            `${themoviedbUrl}${searchData.value}&page=1`,
-            'GET'
-         )
-    .sendRequest()
-    .then( fetchMovie => {
-        console.log(fetchMovie)
-        // Afficher liste films
-        displayMovieList(fetchMovie.results);
-    })
-    .catch( fetchError => {
-        console.log(fetchError);
-    })
-});  
-
-    // Afficher liste films
-
-    const displayMovieList = (listSearch) => {
-        movieList.innerHTML = '';
-
-        for (let i = 0; i < listSearch.length; i++) {
-
-            let film = listSearch[i];
-
-            let coverFilm = listSearch[i].poster_path;
-            coverFilm !== null
-            ? film.poster_path
-            : '.img/blankCover.jpg'
-
-            movieList.innerHTML += `
-                <article>
-                    <figure>
-                        <img src="${coverFilm}" alt="${film.original_title}">
-                        <figcaption>${film.original_title}</figcaption>
-                    </figure>
-                </article>
-            `
-        }
-    };
-
-    // Register
-
-    registerForm.addEventListener('submit', event => {
+const registerUser = () => {
+        registerForm.addEventListener('submit', event => {
             // Stop event propagation
             event.preventDefault();
 
@@ -112,39 +64,43 @@
         .catch( jsonError => {
             console.log(jsonError);
         })
+      })
+};
+
+    /* Login */
+    
+const login = () => {
+        loginForm.addEventListener('submit', event => {
+            // Stop event propagation
+            event.preventDefault();
+    
+            new FETCHrequest(
+                `${apiUrl}/api/login`,
+                'POST',
+                {
+                    email : userEmail.value,
+                    password : userPassword.value
+                }
+             )
+        .sendRequest()
+        .then( jsonData => {
+            console.log(jsonData)
+            // Stocker le token utilisateur dans le Local Storage (incognito)
+            localStorage.setItem('kento', jsonData.data.token);
+    
+        // Données utilisateurs
+        userAccount();
+        })
+        .catch( jsonError => {
+            console.log(jsonError);
+        })
     });
+};
 
-    // Login
+    /* Compte utilisateur */
 
-    loginForm.addEventListener('submit', event => {
-        // Stop event propagation
-        event.preventDefault();
 
-        new FETCHrequest(
-            `${apiUrl}/api/login`,
-            'POST',
-            {
-                email : userEmail.value,
-                password : userPassword.value
-            }
-         )
-    .sendRequest()
-    .then( jsonData => {
-        console.log(jsonData)
-        // Stocker le token utilisateur dans le Local Storage (incognito)
-        localStorage.setItem('kento', jsonData.data.token);
-
-    // Données utilisateurs
-    me();
-    })
-    .catch( jsonError => {
-        console.log(jsonError);
-    })
-});
-
-    // Récupérer données utilisateur
-
-    const me = () => {
+const userAccount = () => {
         new FETCHrequest(
             `${apiUrl}/api/me`,
             'POST',
@@ -163,131 +119,173 @@
     .catch( jsonError => {
         console.log(jsonError);
     })
-    };
+};
 
-    // Valider souscription formulaire
+    /* Search Movies */
 
-    const formSubmission = (formTag, ...inputs) => {
-        return new Promise( (resolve, reject) => {
-            // Capter la soumission d'un formulaire puis...
-            document.querySelector(formTag).addEventListener('submit', event => {
-                // Bloquer le comportement par défaut de l'événement
-                event.preventDefault();
+const getSearchSubmit = () => {
+      searchForm.addEventListener('submit', event => { 
+        event.preventDefault();
 
-                // Création d'un objet pour récupérer les données du formulaire
-                let formData = {};
-
-                // Création d'un objet pour les erreurs
-                let formErrorObject = {};
-
-                // Récupérer la valeur des inputs
-                for( let item of document.querySelectorAll(inputs) ){
-                    // Vérifier les champs
-                    if( item.value.length < +item.getAttribute('minlength') ){ 
-                        // Ajouter les errues du formulaire
-                        formErrorObject[item.getAttribute('name')] = 'error';
-                    };
-
-                    // Ajouter les données du formulaire
-                    formData[item.getAttribute('name')] = item.value;
-                };
-
-                // Vérifier les erreurs
-                if( formErrorObject === {} ){ return reject(formErrorObject) }
-                else{ return resolve(formData) };
-            })
-        });
-    };
+        searchData.value.length > 3
+        ? searchMovie(searchData.value) 
+        : displayError(searchData, 'Minimum 3 caractères !');
+      })
+};
 
 
-    // Ajouter favoris films
+const displayError = (tag, msg) => {
+      searchLabel.textContent = msg;
+      tag.addEventListener('focus', () => searchLabel.textContent = '');
+};
 
-    const addFavorite = (film) => {
-        formSubmission(loginForm, ...inputs)
+const searchMovie = (keywords, index = 1) => {
+
+      let fetchUrl = null;
+
+      typeof keywords === 'number'
+      ? fetchUrl = `https://api.themoviedb.org/3/movie/${keywords}?api_key=6fd32a8aef5f85cabc50cbec6a47f92f`
+      : fetchUrl = theMoviedbURL + keywords + '&page=' + index
+
+      fetch( fetchUrl )
+      .then( response => response.ok ? response.json() : 'Response not OK')
+      .then( jsonData => {
+        typeof keywords === 'number'
+        ? displayPopin(jsonData)
+        : displayMovieList(jsonData.results)
+      })
+      .catch(err => console.error(err));
+};
+
+
+    /* Display movies */
+
+const displayMovieList = listMovies => {
+      searchData.value = '';
+      movieList.innerHTML = '';
+
+      for (let i = 0; i < listMovies.length; i++){
+
+        let cover = listMovies[i].poster_path !== null 
+        ? 'https://image.tmdb.org/t/p/w500' + listMovies[i].poster_path 
+        : './img/blankCover.jpg'
+
+        movieList.innerHTML += `
+        <article>
+            <figure>
+                <img src="${cover}" alt="${listMovies[i].original_title}">
+                <figcaption movie-id="${listMovies[i].id}">${listMovies[i].original_title} (See more...)</figcaption>
+            </figure>
+        </article>
+        `;
+      };
+
+      getPopinLink(document.querySelectorAll('figcaption'));
+};
+
+const getPopinLink = (linkCollection) => {
+        for (let link of linkCollection){
+          link.addEventListener('click', () => {
+            //+var = parseInt(var) || parseFloat(var)
+            searchMovie(+link.getAttribute('movie-id'));
+          });
+        };
+};
+
+const displayPopin = (data) => {
+        console.log(data);
+        moviePopin.innerHTML = `
+          <div>
+            <img src="https://image.tmdb.org/t/p/w500/${data.poster_path}" alt="${data.original_title}">
+          </div>
+
+          <div>
+            <h2>${data.original_title}</h2>
+            <p>${data.overview}</p>
+            <button id="addFav">Add in Favorites</button>
+            <button id="closeButton">Close</button>
+          </div>
+        `;
+
+        moviePopin.parentElement.classList.add('open');
+        addFavorite(document.querySelector('#addFav'), data);
+
+        closePopin(document.querySelector('#closeButton'));
+};
+
+    /* Ajout des favoris */
+
+const addFavorite = (button, data) => {
+    button.addEventListener('click', () => {
 
         new FETCHrequest(
             `${apiUrl}/api/favorite`,
             'POST',
             {
-                id : film.id,
-                title : film.original_title,
+                id : data.id,
+                title : data.original_title,
                 token : localStorage.getItem('kento')
             }
          )
-    .sendRequest()
-    .then( jsonData => {
-        // Ajouter favoris liste
-        console.log(jsonData)
-
-    })
-    .catch( jsonError => {
-        console.log(jsonError);
-    })
-    };
-
-
-    // Supprimer favoris films
-
-    const deleteFavorite = (film) => {
-        formSubmission(loginForm, ...inputs)
-
-        new FETCHrequest(
-            `${apiUrl}/api/favorite/<_id>`,
-            'DELETE',
-            {
-                token : localStorage.getItem('kento')
-            }
-         )
-    .sendRequest()
-    .then( jsonData => {
-        // Ajouter favoris liste
-        console.log(jsonData)
-
-    })
-    .catch( jsonError => {
-        console.log(jsonError);
-    })
-    };
-
-
-document.addEventListener('DOMContentLoaded', () => {
-
-            // Vérifier la présence d'un token en Local Storage
-            if(localStorage.getItem(localSt) !== null){
-                // Récupérer les informations utilisateur grâce au token
-                me();
-            }
-            else{
-                /* 
-                Afficher les formulaires registerForm et loginForm
-                */
-                    document.querySelector('#registerForm').classList.remove('hidden');
-                    document.querySelector('#loginForm').classList.remove('hidden');
-                //
+        .sendRequest()
+        .then( jsonData => {console.log(jsonData)})
+        .catch( jsonError => {console.log(jsonError);
+        })
     
-                /* 
-                Capter la soumission des formulaires
-                */
-                    formSubmission(
-                        '#registerForm', 
-                        '#registerForm [name="email"]', 
-                        '#registerForm [name="password"]', 
-                        '[name="pseudo"]' 
-                    )
-                    .then( formData => register(formData))
-                    .catch( formError => console.log(formError));
-    
-                    formSubmission(
-                        '#loginForm', 
-                        '#loginForm [name="email"]', 
-                        '#loginForm [name="password"]'
-                    )
-                    .then( formData => login(formData))
-                    .catch( formError => console.log(formError));
-                //
-            };
+        favoriteList.innerHTML += `
+                <li><span>${data.original_title}</span></li>
+                <button class="eraseFavorite" movie-id="${data.id}"><i class="fas fa-eraser"></i></button>
+            `    
+    })
+};
 
-});
+/* Supprimer favoris */
+
+// const deleteFavorite = favorites => {
+//     for( let item of favorites ){
+//         item.addEventListener('click', () => {
+//             new FETCHrequest( `${apiUrl}/api/favorite/${item.data._id}`, 'DELETE' )
+//             .fetch()
+//             .then( fetchData => checkUserToken('favorite'))
+//             .catch( fetchError => {
+//                 console.log(fetchError)
+//             })
+//         })
+//     }
+// }
+
+/* Close popin */
+
+const closePopin = (button) => {
+    button.addEventListener('click', () => {
+        button.parentElement.parentElement.parentElement.classList.add('close'); // remonte parents div>article>section
+        setTimeout( () => {
+        button.parentElement.parentElement.parentElement.classList.remove('open');
+        button.parentElement.parentElement.parentElement.classList.remove('close');
+        }, 300)
+    })
+};
 
 
-// Pop in
+    // Attendre le chargement du DOM
+    document.addEventListener('DOMContentLoaded', () => {
+
+    // Lancer IHM
+
+    if(localStorage.getItem('kento') !== null){
+      // Récupérer info user avec l'user_id
+      userAccount();
+    }
+    else{
+      // Afficher les formulaires
+      document.querySelector('#registerForm').classList.remove('hidden');
+      document.querySelector('#loginForm').classList.remove('hidden');
+    }
+
+    getSearchSubmit();
+
+    registerUser('#registerForm', '#registerForm [name="userEmail"]', '#registerForm [name="userPassword"]', '#registerForm [name="userPseudo"]');
+
+    login('#loginForm', '#loginForm [name="loginEmail"]', '#loginForm [name="loginPassword"]');
+
+  })

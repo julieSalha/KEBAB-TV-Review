@@ -155,6 +155,8 @@ const searchMovie = (keywords, index = 1) => {
         : displayMovieList(jsonData.results)
       })
       .catch(err => console.error(err));
+
+      closeLoading();
 };
 
 
@@ -275,8 +277,12 @@ const closePopin = (button) => {
 /* Close loading */
 
 const closeLoading = () => {
-    // loading
-};
+    loading.classList.add('close');
+    setTimeout(() => { 
+        loading.classList.remove('open');
+        loading.classList.remove('close');
+    }, 600);
+}
 
     // Attendre le chargement du DOM
     document.addEventListener('DOMContentLoaded', () => {

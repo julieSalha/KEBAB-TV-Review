@@ -121,6 +121,43 @@ const userAccount = () => {
     })
 };
 
+    /* Favoris utilisateurs */
+
+    const checkUserToken = (step = 'favorite') => {
+        new FETCHrequest(
+            `${apiUrl}/api/me/${localStorage.getItem(localSt)}`,
+            'GET'
+        )
+        .fetch()
+        .then( fetchData => {
+            // Check step
+            if( step === 'favorite' ){ // Add favorite
+                // Display favorites
+                displayFavorite(fetchData.data.favorite)
+            }
+            else if( step === 'checkuser' ){ // First check
+                console.log(fetchData)
+                // Hide register and loggin form
+                registerForm.classList.add('hidden');
+                loginForm.classList.add('hidden');
+                searchForm.classList.add('open');
+
+                // Display nav
+                displayNav(fetchData.data.user.pseudo);
+
+                // Display favorites
+                displayFavorite(fetchData.data.favorite)
+
+                // Get form submit event
+                getFormSumbit();
+            }
+        })
+        .catch( fetchError => {
+            console.log(fetchError)
+        })
+    }
+
+
     /* Search Movies */
 
 const getSearchSubmit = () => {
@@ -156,7 +193,7 @@ const searchMovie = (keywords, index = 1) => {
       })
       .catch(err => console.error(err));
 
-      closeLoading();
+    //   closeLoading();
 };
 
 
@@ -276,13 +313,13 @@ const closePopin = (button) => {
 
 /* Close loading */
 
-const closeLoading = () => {
-    loading.classList.add('close');
-    setTimeout(() => { 
-        loading.classList.remove('open');
-        loading.classList.remove('close');
-    }, 600);
-}
+// const closeLoading = () => {
+//     loading.classList.add('close');
+//     setTimeout(() => { 
+//         loading.classList.remove('open');
+//         loading.classList.remove('close');
+//     }, 600);
+// }
 
     // Attendre le chargement du DOM
     document.addEventListener('DOMContentLoaded', () => {

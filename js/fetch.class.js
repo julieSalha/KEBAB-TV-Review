@@ -15,7 +15,7 @@ class FETCHrequest {
         };
 
         // Ajouter les données dans les requêtes POST et PUT (modifier)
-        if( this.requestType === 'POST' || this.requestType === 'PUT'){
+        if( this.requestType === 'POST' || this.requestType === 'PUT' || this.requestType === 'DELETE'){
             this.fetchOptions.body = JSON.stringify(data);
         };
     }

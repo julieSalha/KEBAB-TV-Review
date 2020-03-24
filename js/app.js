@@ -41,9 +41,14 @@
 
 // FONCTIONS
 
+    /* Interface utilisateur */
+
+document.querySelector('#registerForm').classList.remove('open');
+document.querySelector('#loginForm').classList.remove('open');
+
     /* Register */ 
 
-const registerUser = () => {
+const registerUser = (userEmail, userPassword, userPseudo) => {
         registerForm.addEventListener('submit', event => {
             // Stop event propagation
             event.preventDefault();
@@ -86,7 +91,8 @@ const login = () => {
         .then( jsonData => {
             console.log(jsonData)
             // Stocker le token utilisateur dans le Local Storage (incognito)
-            localStorage.setItem('kento', jsonData.data.token);
+            localStorage.setItem('kento', jsonData.data.token)
+            displayFavorite();
     
         // Données utilisateurs
         userAccount();
@@ -114,49 +120,11 @@ const userAccount = () => {
         registerForm.classList.add('hidden')
         loginForm.classList.add('hidden')
         console.log(jsonData)
-
     })
     .catch( jsonError => {
         console.log(jsonError);
     })
 };
-
-    /* Favoris utilisateurs */
-
-    const checkUserToken = (step = 'favorite') => {
-        new FETCHrequest(
-            `${apiUrl}/api/me/${localStorage.getItem(localSt)}`,
-            'GET'
-        )
-        .fetch()
-        .then( fetchData => {
-            // Check step
-            if( step === 'favorite' ){ // Add favorite
-                // Display favorites
-                displayFavorite(fetchData.data.favorite)
-            }
-            else if( step === 'checkuser' ){ // First check
-                console.log(fetchData)
-                // Hide register and loggin form
-                registerForm.classList.add('hidden');
-                loginForm.classList.add('hidden');
-                searchForm.classList.add('open');
-
-                // Display nav
-                displayNav(fetchData.data.user.pseudo);
-
-                // Display favorites
-                displayFavorite(fetchData.data.favorite)
-
-                // Get form submit event
-                getFormSumbit();
-            }
-        })
-        .catch( fetchError => {
-            console.log(fetchError)
-        })
-    }
-
 
     /* Search Movies */
 
@@ -192,10 +160,7 @@ const searchMovie = (keywords, index = 1) => {
         : displayMovieList(jsonData.results)
       })
       .catch(err => console.error(err));
-
-    //   closeLoading();
 };
-
 
     /* Display movies */
 
@@ -267,37 +232,67 @@ const addFavorite = (button, data) => {
             }
          )
         .sendRequest()
-        .then( jsonData => console.log(jsonData))
-        .catch( jsonError => console.log(jsonError));
-    
-        favoriteList.innerHTML += `
-                <li>
-                    <span>${data.original_title}</span>
-                    <button class="eraseFavorite" movie-id="${data._id}"><i class="fas fa-eraser"></i></button>
-                </li>
-            `    
+        .then( jsonData => displayFavorite(jsonData))
+        .catch( jsonError => console.log(jsonError));   
     })
+};
+
+const displayFavorite = () => {
+
+    new FETCHrequest(
+        `${apiUrl}/api/me`,
+        'POST',
+        {
+            token : localStorage.getItem('kento')
+        }
+     )
+    .sendRequest()
+    .then( jsonData => {
+        console.log(jsonData.data.favorite)
+        favoriteList.innerHTML = '';
+
+        for (let item of jsonData.data.favorite) {
+            favoriteList.innerHTML += `
+                    <li>
+                    <button>${item.title}</button>
+                    <button class="playFavorite">Play</button>
+                    <button class="eraseFavorite" onclick="deleteFavorite('${item._id}')" movie-id="${item._id}"><i class="fas fa-eraser"></i></button>
+                </li>
+            `   
+        }
+    })
+    .catch( jsonError => console.log(jsonError));
+
 };
 
 
 /* Supprimer favoris */
 
-const deleteFavorite = _id => {
+const deleteFavorite = (id) => {
+    console.log(id);
 
-    document.querySelectorAll('.eraseFavorite').addEventListener('click', () => {
         new FETCHrequest(
-            `${apiUrl}/api/favorite/<_id>`,
+            `${apiUrl}/api/favorite/${id}`,
             'DELETE',
             {
                 token : localStorage.getItem('kento')
             }
          )
         .sendRequest()
-        .then( jsonData => console.log(jsonData))
+        .then( jsonData => displayFavorite())
         .catch( jsonError => { console.log(jsonError) })
-    })
+    
 };
 
+/* Design */
+
+// Loading
+
+const kebab = () => {
+    document.querySelector('#loading').classList.remove('close');
+    document.querySelector('#loading').classList.remove('open');
+
+};
 
 /* Close popin */
 
@@ -310,16 +305,6 @@ const closePopin = (button) => {
         }, 300)
     })
 };
-
-/* Close loading */
-
-// const closeLoading = () => {
-//     loading.classList.add('close');
-//     setTimeout(() => { 
-//         loading.classList.remove('open');
-//         loading.classList.remove('close');
-//     }, 600);
-// }
 
     // Attendre le chargement du DOM
     document.addEventListener('DOMContentLoaded', () => {

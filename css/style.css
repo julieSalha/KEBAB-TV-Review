@@ -1,6 +1,6 @@
 body{
     padding: 2rem;
-    /* background: #ff25ff; */
+    background: #ff25ff;
   }
 
   h1 {
@@ -25,6 +25,14 @@ body{
     margin-left: auto;
     margin-right: auto
   }
+
+  #registerForm.hidden,#loginForm.hidden {
+      display: none;
+  }
+
+  #registerForm.open,#loginForm.open{
+    display: none;
+}
   
   footer{
     text-align: center;

@@ -31,8 +31,15 @@
     const favoriteList = document.querySelector('#favorite ul');
     const buttonDelete = document.querySelector('#favorite ul button.eraseFavorite');
 
+    // Last movies
+    const lastMoviesTitle = document.querySelector('.last-movies');
+    const lastMoviesContent = document.querySelector('.movieHome');
+
     // Loading
     const loading = document.querySelector('#loading');
+
+    // Favorite
+    const favorite = document.querySelector('#favorite ');
 
     // Error
     const formError = document.querySelector('#formError');
@@ -131,7 +138,8 @@ const userAccount = () => {
 const getSearchSubmit = () => {
       searchForm.addEventListener('submit', event => { 
         event.preventDefault();
-
+        lastMoviesTitle.classList.add('close');
+        lastMoviesContent.classList.add('close');
         searchData.value.length > 3
         ? searchMovie(searchData.value) 
         : displayError(searchData, 'Minimum 3 caractères !');
@@ -238,7 +246,7 @@ const addFavorite = (button, data) => {
 };
 
 const displayFavorite = () => {
-
+        favorite.classList.add('open');
     new FETCHrequest(
         `${apiUrl}/api/me`,
         'POST',
@@ -286,13 +294,13 @@ const deleteFavorite = (id) => {
 
 /* Design */
 
-// Loading
+  // Loading
 
 const kebab = () => {
-    document.querySelector('#loading').classList.remove('close');
-    document.querySelector('#loading').classList.remove('open');
-
+    setTimeout(function(){ loading.classList.add('close');}, 3000);
 };
+
+
 
 /* Close popin */
 
@@ -308,6 +316,9 @@ const closePopin = (button) => {
 
     // Attendre le chargement du DOM
     document.addEventListener('DOMContentLoaded', () => {
+
+    kebab();
+
 
     // Lancer IHM
 

@@ -103,6 +103,14 @@ figure:hover {
     display: block;
 }
 
+#loginForm label {
+    color: #ffffff;
+}
+
+#searchForm label {
+    color: #000000;
+}
+
 #registerForm.hidden,#loginForm.hidden {
     display: none;
 }
@@ -292,7 +300,7 @@ footer a {
 }
 
 footer p {
-    color: white;
+    color: #000000;
     text-align: center;
     margin-top: 15px;
     font-weight: bold;
@@ -331,7 +339,6 @@ Responsive
     }
 
     .movieHome img {
-        width: calc(100%/4);
         margin: 15px;
     }
 

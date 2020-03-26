@@ -10,14 +10,53 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.3.0/milligram.css">
     <link rel="stylesheet" href="./css/style.css">
+
+    <!-- Manifest : infos base app-->
+    <link rel="manifest" href="./manifest.json">
+
+    <!-- Define color theme -->
+    <meta name="theme-color" content="#ff0000">
+    <meta name="msapplication-navbutton-color" content="#000000">
+    <meta name="msapplication-starturl" content="/index.html">
+
+    <!-- Apple -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Kebab.tv">
+    <meta name="application-name" content="Kebab.tv">
+    <meta name="apple-mobile-web-app-title" content="Kebab.tv">
+
+    <script>
+        // This is the service worker with the Cache-first network
+        // Add this below content to your HTML page, or add the js file to your page at the very top to register service worker
+  
+        // Check compatibility for the browser we're running this in
+        if ("serviceWorker" in navigator) {
+          if (navigator.serviceWorker.controller) {
+            console.log("[PWA Builder] active service worker found, no need to register");
+          } else {
+            // Register the service worker
+            navigator.serviceWorker
+              .register("./service-worker.js", {
+                scope: "./"
+              })
+              .then(function (reg) {
+                console.log("[PWA Builder] Service worker has been registered for scope: " + reg.scope);
+              });
+          }
+        }
+      </script>
+
 </head>
     <body>
         <header>
-            <a href="#"><img class="img-tv logo" alt="television" src="img/television.svg"></a>
+            <a href="#"><img class="img-tv logo" alt="television" src="img/television.svg" aria-hidden="true"></a>
             <h1 ><strong>Kebab</strong><b>.tv</b> <span>Salade, tomate, streaming ?</span></h1>
             <form action="#" id="searchForm">
-                <input type="text" name="searchData" id="searchData" minlength="1" required placeholder="Search...">
-                <button type="submit" onclick="kebab()"><i class="fas fa-search"></i></button>
+                <label for="searchData">Email *</label>
+                <input id="searchData" type="text" name="searchData" id="searchData" minlength="1" required placeholder="Search...">
+                <button type="submit" onclick="kebab()" aria-label="Left Align"><i class="fas fa-search"></i></button>
             </form>
 
             <aside id="loading"><img src="./img/loading.gif" alt="Loading..."></aside>
@@ -28,27 +67,64 @@
                 <div class="formHome">
                     <form action="#" id="registerForm">
                         <h2>Create your profil</h2>
-                        <input type="text" name="userEmail" required minlength="5" placeholder="Your email">
-                        <input type="text" name="userPassword" required minlength="5" placeholder="Your password">
-                        <input type="text"  name="userPseudo" required minlength="2" placeholder="Your nickname">
-                        <button type="submit">Register</button>
+                        <label for="userEmail">Email *</label>
+                        <input id="userEmail" type="text" name="userEmail" required minlength="5" placeholder="Your email">
+                        <label for="userPassword">Password *</label>
+                        <input id="userPassword" type="text" name="userPassword" required minlength="5" placeholder="Your password">
+                        <label for="userPseudo">Pseudo *</label>
+                        <input id="userPseudo" type="text"  name="userPseudo" required minlength="2" placeholder="Your nickname">
+                        <button type="submit" aria-label="Left Align">Register</button>
                     </form>
         
                     <form action="#" id="loginForm">
                         <h3>Or login to <span class="logo"><strong>Kebab</strong><b>.tv</b></span></h3>
-                        <input type="text" name="loginEmail" required minlength="5" placeholder="Your email">
-                        <input type="text" name="loginPassword" required minlength="5" placeholder="Your password">
-                        <button type="submit">Login</button>
+                        <label for="loginEmail">Email *</label>
+                        <input id="loginEmail" type="text" name="loginEmail" required minlength="5" placeholder="Your email">
+                        <label for="loginPassword">Email *</label>
+                        <input id="loginPassword" type="text" name="loginPassword" required minlength="5" placeholder="Your password">
+                        <button type="submit" aria-label="Left Align">Login</button>
                     </form>
                 </div>
                 <h2 class="last-movies">Derniers ajouts</h2>
                 <div class="movieHome">
-                    <img src="img/movies/crazy.jpg" alt="crazy">
-                    <img src="img/movies/get-out.jpg" alt="get out">
-                    <img src="img/movies/kojer.jpg" alt="joker">
-                    <img src="img/movies/podium.jpg" alt="podium">
-                    <img src="img/movies/polisse.jpg" alt="polisse">
-                    <img src="img/movies/titanic.jpg" alt="titanice">
+
+                    <!-- Responsive images static -->
+                    <picture>
+                        <source media="(max-width: 768px)" srcset="img/movies/crazy-sm.jpg">
+                        <source media="(min-width: 769px)" srcset="img/movies/crazy-de.jpg">
+                        <img src="img/movies/crazy-de.jpg" alt="Chris standing up holding his daughter Elva">
+                      </picture>
+                      <picture>
+                        <source media="(max-width: 768px)" srcset="img/movies/get-out-sm.jpg">
+                        <source media="(min-width: 769px)" srcset="img/movies/get-out-de.jpg">
+                        <img src="img/movies/get-out-de.jpg" alt="Chris standing up holding his daughter Elva">
+                      </picture>
+                      <picture>
+                        <source media="(max-width: 768px)" srcset="img/movies/joker-sm.jpg">
+                        <source media="(min-width: 769px)" srcset="img/movies/joker-de.jpg">
+                        <img src="img/movies/joker-de.jpg" alt="Chris standing up holding his daughter Elva">
+                      </picture>
+                      <picture>
+                        <source media="(max-width: 768px)" srcset="img/movies/podium-sm.jpg">
+                        <source media="(min-width: 769px)" srcset="img/movies/podium-de.jpg">
+                        <img src="img/movies/podium-de.jpg" alt="Chris standing up holding his daughter Elva">
+                      </picture>
+                      <picture>
+                        <source media="(max-width: 768px)" srcset="img/movies/polisse-sm.jpg">
+                        <source media="(min-width: 769px)" srcset="img/movies/polisse-de.jpg">
+                        <img src="img/movies/polisse-de.jpg" alt="Chris standing up holding his daughter Elva">
+                      </picture>
+                      <picture>
+                        <source media="(max-width: 768px)" srcset="img/movies/titanic-sm.jpg">
+                        <source media="(min-width: 769px)" srcset="img/movies/titanic-de.jpg">
+                        <img src="img/movies/titanic-de.jpg" alt="Chris standing up holding his daughter Elva">
+                      </picture>
+                    <!-- <img src="img/movies/crazy.jpg" alt="crazy"> -->
+                    <!-- <img src="img/movies/get-out.jpg" alt="get out"> -->
+                    <!-- <img src="img/movies/joker-sm.jpg" alt="joker"> -->
+                    <!-- <img src="img/movies/podium.jpg" alt="podium"> -->
+                    <!-- <img src="img/movies/polisse.jpg" alt="polisse"> -->
+                    <!-- <img src="img/movies/titanic.jpg" alt="titanic"> -->
                 </div>
             </div>
 

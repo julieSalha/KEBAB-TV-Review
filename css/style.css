@@ -1,15 +1,134 @@
+/*
+Reset CSS
+*/
+
+*{
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html{
+    font-size: 62.5%; /* ( / 16pixels de base)*/
+}
+
+body{
+    font-size: 1.6rem;  /*taille en em prend comme référence la taille de son parent le plus proche*/
+}
+
+img{
+    max-width: 100%;
+}
+
+a:not([target="_blank"]){
+    text-decoration: none;  /*sauf celles qui ont un target blank*/
+}
+
 body{
     padding: 2rem;
     background: #ff25ff;
-  }
+}
 
-  h1, h2, h3 {
-      color: #400A40;
-  }
-  
+/*
+Titles
+*/
+
+h1, h2, h3 {
+    color: #400A40;
+}
+
 h1 {
     font-size: 4.8rem;
 }
+
+/*
+Header
+*/
+
+header{
+    position: relative;
+    z-index: 1;
+}
+
+header .img-tv {
+    display: inline-block;
+    width: 100%;
+    max-width: 120px;
+    margin-right: 20px;
+}
+
+header h1 {
+    display: inline-block;
+}
+
+input[type='text'] {
+    background-color: #ffffff;
+}
+
+button {
+    background-color: #400A40;
+    border-color: #400A40;
+}
+
+figure {
+    background: white;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, .5);
+    padding: 1rem;
+    margin: 1em 5px;
+    transition: all .3s linear;
+}
+
+#registerForm, #loginForm{
+    width: 50%;
+    margin: 25px auto;
+    display: block;
+}
+
+#registerForm.hidden,#loginForm.hidden {
+    display: none;
+}
+
+#registerForm.open,#loginForm.open{
+    display: none;
+}
+
+#registerForm {
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 15px;  
+}
+
+#registerForm h3 {
+    color: #000000;
+}
+
+#registerForm button {
+    background: #000000;
+    color: #ffffff;
+}
+
+#loginForm {
+    padding: 20px;
+    background: #000000;
+    border-radius: 15px;
+    margin-bottom: 50px;
+}
+
+#loginForm h3 {
+    color: #ffffff;
+}
+
+#loginForm button {
+    background: #ffffff;
+    color: #000000;
+}
+
+/*
+Favoris
+*/
+
 #favorite {
     display: none;
 }
@@ -30,82 +149,9 @@ h1 {
     margin-bottom: -15px;
 }
 
-header{
-    position: relative;
-    z-index: 1;
-  }
-
-header .img-tv {
-    display: inline-block;
-    width: 100%;
-    max-width: 120px;
-    margin-right: 20px;
-}
-
-header h1 {
-    display: inline-block;
-}
-  
-input[type='text'] {
-    background-color: #ffffff;
-  }
-
-  button {
-    background-color: #400A40;
-    border-color: #400A40;
-  }
-
-  figure {
-    background: white;
-    box-shadow: 0 0 1rem rgba(0, 0, 0, .5);
-    padding: 2rem;
-    transition: all .3s linear;
-  }
-  
-  #registerForm, #loginForm{
-    width: 50%;
-    margin: 25px auto;
-    display: block;
-  }
-
-  #registerForm.hidden,#loginForm.hidden {
-      display: none;
-  }
-
-  #registerForm.open,#loginForm.open{
-    display: none;
-}
-
-#registerForm {
-    padding: 20px;
-    background: #ffffff;
-    border-radius: 15px;  
-}
-
-#registerForm h3 {
-    color: #000000;
-}
-
-#registerForm button {
-    background: #000000;
-    color: #ffffff;
-}
-  
-#loginForm {
-    padding: 20px;
-    background: #000000;
-    border-radius: 15px;
-    margin-bottom: 50px;
-}
-
-#loginForm h3 {
-    color: #ffffff;
-}
-
-#loginForm button {
-    background: #ffffff;
-    color: #000000;
-}
+/*
+Derniers ajouts (statique sorry but I can't)
+*/
 
 .movieHome {
     display: flex;
@@ -130,46 +176,37 @@ input[type='text'] {
     -webkit-text-fill-color: transparent;
 }
 
-  footer{
-    text-align: center;
-  }
 
-  footer a {
-      display: inline-block;
-      width: 100%;
-      height: 100%;
-    max-width: 85px;
-  }
+/*
+Movies list
+*/
 
-  footer p {
-    color: white;
-    text-align: right;
-    font-weight: bold;
-  }
+#movieList {
+    text-align: justify;
+}
 
-  #movieList {
-    text-align: center;
-  }
-  
-  #movieList article {
+#movieList article {
     display: inline-block;
     position: relative;
-    width: calc(100%/2.5);
-  }
+    width: calc(100%/3.5);
+}
 
-  #movieList figcaption {
+#movieList figcaption {
     font-weight: 900;
     color: black;
     text-transform: uppercase;
 }
-  }
 
-  #movieList div div {
+#movieList div div {
     margin: auto;
     width: 50%;
-  }
-  
-  #moviePopin {
+}
+
+/*
+Movies popin
+*/
+
+#moviePopin {
     position: fixed;
     top: 0;
     left: 0;
@@ -180,44 +217,69 @@ input[type='text'] {
     display: flex;
     flex-direction: column;
     opacity: 0;
-    transition: opacity .3s;
-  }
-  
-  #moviePopin.open{
+    transition: opacity .3s;}
+
+#moviePopin.open{
     opacity: 1;
     z-index: 1000;
-  }
-  
-  #moviePopin.open.close{
+}
+
+#moviePopin.open.close{
     opacity: 0;
-  }
-  
-  #moviePopin article {
+}
+
+#moviePopin article {
     margin: auto;
     display: flex;
     justify-content: space-between;
     width: 50%;
     background: #000000;
     padding: 1rem;
-  }
+}
 
-  #moviePopin article #addFav {
-      background: #ffffff;
-      color: #000000;
-  }
+#moviePopin article #addFav {
+    background: #ffffff;
+    color: #000000;
+}
 
-  #moviePopin article #closeButton {
-      background: red;
-      color: #ffffff;
-  }
+#moviePopin article #closeButton {
+    background: red;
+    color: #ffffff;
+}
 
-  #moviePopin article p {
-      color:#ffffff;
-  }
-  
-  #moviePopin article div{
+#moviePopin article p {
+    color:#ffffff;
+}
+
+#moviePopin article div{
     width: calc( 50% - 1rem );
-  }
+}
+
+/*
+Footer
+*/
+
+footer{
+    text-align: center;
+    padding: 30px 15px 20px;
+}
+
+footer a {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    max-width: 85px;
+}
+
+footer p {
+    color: white;
+    text-align: right;
+    font-weight: bold;
+}
+
+/*
+Loading
+*/
 
 #loading.close {
     display: none;
@@ -227,14 +289,13 @@ input[type='text'] {
 display: none;
 }
 
-
 #loading {
-   background: #ff25ff;
-   text-align: center;
-   position: absolute;
-   height: 100vh;
-   width: 100vw;
-   top: 30vh;
-   left: 0;
-   transition: 2s;
-  }
+    background: #ff25ff;
+    text-align: center;
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    top: 30vh;
+    left: 0;
+    transition: 2s;
+}

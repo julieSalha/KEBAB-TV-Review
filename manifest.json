@@ -4,7 +4,7 @@
     "short_name": "k.tv",
     "dir": "ltr",
     "orientation": "portrait",
-    "scope": "/",
+    "scope": "KEBAB-TV-Review/",
     "start_url": "/?homescreen=1",
     "display": "standalone",
     "theme_color": "#ff25ff",
